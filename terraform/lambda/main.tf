@@ -54,7 +54,7 @@ resource "aws_lambda_function_url" "deleteTodo" {
     allow_credentials = false
     allow_origins     = ["*"]
     allow_methods     = ["POST"]
-    allow_headers     = ["date", "keep-alive"]
+    allow_headers     = ["*"]
     expose_headers    = ["access-control-allow-origin"]
     max_age           = 86400
   }
@@ -88,8 +88,8 @@ resource "aws_lambda_function_url" "getTodos" {
   cors {
     allow_credentials = false
     allow_origins     = ["*"]
-    allow_methods     = ["POST"]
-    allow_headers     = ["date", "keep-alive"]
+    allow_methods     = ["GET"]
+    allow_headers     = ["*"]
     expose_headers    = ["access-control-allow-origin"]
     max_age           = 86400
   }
@@ -124,7 +124,7 @@ resource "aws_lambda_function_url" "updateTodo" {
     allow_credentials = false
     allow_origins     = ["*"]
     allow_methods     = ["POST"]
-    allow_headers     = ["date", "keep-alive"]
+    allow_headers     = ["*"]
     expose_headers    = ["access-control-allow-origin"]
     max_age           = 86400
   }
