@@ -29,7 +29,7 @@ resource "aws_lambda_function" "deleteTodo" {
   filename      = data.archive_file.lambda_deleteTodo.output_path
   function_name = "deleteTodo-function"
   role          = data.aws_iam_role.LabRole.arn
-  handler       = "index.js"
+  handler       = "index.handler"
 
   source_code_hash = filebase64sha256(data.archive_file.lambda_deleteTodo.output_path)
 
@@ -64,7 +64,7 @@ resource "aws_lambda_function" "getTodos" {
   filename      = data.archive_file.lambda_getTodos.output_path
   function_name = "getTodos-function"
   role          = data.aws_iam_role.LabRole.arn
-  handler       = "index.js"
+  handler       = "index.handler"
 
   source_code_hash = filebase64sha256(data.archive_file.lambda_getTodos.output_path)
 
@@ -99,7 +99,7 @@ resource "aws_lambda_function" "updateTodo" {
   filename      = data.archive_file.lambda_updateTodo.output_path
   function_name = "updateTodo-function"
   role          = data.aws_iam_role.LabRole.arn
-  handler       = "index.js"
+  handler       = "index.handler"
 
   source_code_hash = filebase64sha256(data.archive_file.lambda_updateTodo.output_path)
 
