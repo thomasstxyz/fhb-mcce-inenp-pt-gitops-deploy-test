@@ -1,3 +1,5 @@
+![Illustration](./infrastructure-diagram.drawio.png)
+
 # Description
 
 This repository contains:
