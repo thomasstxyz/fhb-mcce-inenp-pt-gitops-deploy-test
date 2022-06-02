@@ -70,7 +70,7 @@ data "aws_iam_policy_document" "todoApp" {
 }
 
 output "bucket_website_url" {
-  value = aws_s3_bucket_website_configuration.todoApp.website_endpoint
+  value = "http://${aws_s3_bucket_website_configuration.todoApp.website_endpoint}"
 }
 # Archive a file to be used with Lambda using consistent file mode
 data "archive_file" "lambda_deleteTodo" {
