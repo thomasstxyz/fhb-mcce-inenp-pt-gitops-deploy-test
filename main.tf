@@ -70,21 +70,21 @@ output "bucket_website_url" {
 # Archive a file to be used with Lambda using consistent file mode
 data "archive_file" "lambda_deleteTodo" {
   type             = "zip"
-  source_file      = "${path.module}/../lambda/functions/deleteTodo/index.js"
+  source_file      = "${path.module}/lambda/functions/deleteTodo/index.js"
   output_file_mode = "0666"
   output_path      = "${path.module}/files/lambda-deleteTodo.js.zip"
 }
 
 data "archive_file" "lambda_getTodos" {
   type             = "zip"
-  source_file      = "${path.module}/../lambda/functions/getTodos/index.js"
+  source_file      = "${path.module}/lambda/functions/getTodos/index.js"
   output_file_mode = "0666"
   output_path      = "${path.module}/files/lambda-getTodos.js.zip"
 }
 
 data "archive_file" "lambda_updateTodo" {
   type             = "zip"
-  source_file      = "${path.module}/../lambda/functions/updateTodo/index.js"
+  source_file      = "${path.module}/lambda/functions/updateTodo/index.js"
   output_file_mode = "0666"
   output_path      = "${path.module}/files/lambda-updateTodo.js.zip"
 }

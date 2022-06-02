@@ -1,7 +1,5 @@
 *.zip
 
-terraform/old
-
 
 # Local .terraform directories
 **/.terraform/*
