@@ -207,7 +207,7 @@ resource "aws_lambda_function_url" "updateTodo" {
 output "url_deleteTodo" {
   value = aws_lambda_function_url.deleteTodo.function_url
 }
-output "url_getTodo" {
+output "url_getTodos" {
   value = aws_lambda_function_url.getTodos.function_url
 }
 output "url_updateTodo" {

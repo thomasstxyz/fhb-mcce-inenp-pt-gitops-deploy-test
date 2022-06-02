@@ -8,10 +8,10 @@ This repository contains:
     - deleteTodo
     - getTodos
     - updateTodo
-- Terraform plans:
-    - `terraform/dynamodb/`, which creates the DynamoDB Table.
-    - `terraform/lambda/`, which creates the functions.
-    - `terraform/s3/`, which creates an S3 bucket for static website hosting.
+- Terraform plan `main.tf`, which creates
+    - DynamoDB Table
+    - Lambda Functions
+    - S3 bucket for static website hosting.
 
 The source of the Angular App, which gets deployed to the S3 bucket,
 is hosted in another Git repository 
