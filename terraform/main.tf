@@ -1,21 +1,90 @@
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "3.26.0"
+    }
+    random = {
+      source  = "hashicorp/random"
+      version = "3.0.1"
+    }
+  }
+  required_version = ">= 1.1.0"
+
+  cloud {
+    organization = "2110781014"
+
+    workspaces {
+      name = "tmcsp-gitops-deploy"
+    }
+  }
+}
+resource "aws_s3_bucket" "todoApp" {
+  bucket = "tmcsp-team-j-todo-app"
+}
+
+resource "aws_s3_bucket_acl" "todoApp" {
+  bucket = aws_s3_bucket.todoApp.id
+  acl    = "private"
+}
+
+resource "aws_s3_bucket_website_configuration" "todoApp" {
+  bucket = aws_s3_bucket.todoApp.bucket
+
+  index_document {
+    suffix = "index.html"
+  }
+
+  error_document {
+    key = "error.html"
+  }
+}
+
+resource "aws_s3_bucket_policy" "todoApp" {
+  bucket = aws_s3_bucket.todoApp.id
+  policy = data.aws_iam_policy_document.todoApp.json
+}
+
+data "aws_iam_policy_document" "todoApp" {
+  statement {
+    sid = "Add permission"
+
+    principals {
+      type        = "*"
+      identifiers = ["*"]
+    }
+
+    actions = [
+      "s3:GetObject",
+    ]
+
+    resources = [
+      "arn:aws:s3:::${aws_s3_bucket.todoApp.bucket}/*",
+    ]
+  }
+}
+
+output "bucket_website_url" {
+  value = aws_s3_bucket_website_configuration.todoApp.website_endpoint
+}
 # Archive a file to be used with Lambda using consistent file mode
 data "archive_file" "lambda_deleteTodo" {
   type             = "zip"
-  source_file      = "${path.module}/../../lambda/functions/deleteTodo/index.js"
+  source_file      = "${path.module}/../lambda/functions/deleteTodo/index.js"
   output_file_mode = "0666"
   output_path      = "${path.module}/files/lambda-deleteTodo.js.zip"
 }
 
 data "archive_file" "lambda_getTodos" {
   type             = "zip"
-  source_file      = "${path.module}/../../lambda/functions/getTodos/index.js"
+  source_file      = "${path.module}/../lambda/functions/getTodos/index.js"
   output_file_mode = "0666"
   output_path      = "${path.module}/files/lambda-getTodos.js.zip"
 }
 
 data "archive_file" "lambda_updateTodo" {
   type             = "zip"
-  source_file      = "${path.module}/../../lambda/functions/updateTodo/index.js"
+  source_file      = "${path.module}/../lambda/functions/updateTodo/index.js"
   output_file_mode = "0666"
   output_path      = "${path.module}/files/lambda-updateTodo.js.zip"
 }
@@ -138,4 +207,20 @@ output "url_getTodo" {
 }
 output "url_updateTodo" {
   value = aws_lambda_function_url.updateTodo.function_url
+}
+resource "aws_dynamodb_table" "basic-dynamodb-table" {
+  name           = "todos"
+  read_capacity  = 20
+  write_capacity = 20
+  hash_key       = "id"
+
+  attribute {
+    name = "id"
+    type = "S"
+  }
+
+  tags = {
+    Name = "dynamodb-table-1"
+    app = "todo"
+  }
 }
