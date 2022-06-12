@@ -15,7 +15,7 @@ terraform {
     organization = "2110781014"
 
     workspaces {
-      name = "tmcsp-gitops-deploy"
+      name = "tmcsp-gitops-deploy-test"
     }
   }
 }
@@ -24,17 +24,17 @@ provider "aws" {
   region = "us-east-1"
 }
 
-resource "aws_s3_bucket" "todoApp" {
-  bucket = "tmcsp-team-j-todo-app"
+resource "aws_s3_bucket" "todoAppTest" {
+  bucket = "tmcsp-team-j-todo-app-test"
 }
 
-resource "aws_s3_bucket_acl" "todoApp" {
-  bucket = aws_s3_bucket.todoApp.id
+resource "aws_s3_bucket_acl" "todoAppTest" {
+  bucket = aws_s3_bucket.todoAppTest.id
   acl    = "private"
 }
 
-resource "aws_s3_bucket_website_configuration" "todoApp" {
-  bucket = aws_s3_bucket.todoApp.bucket
+resource "aws_s3_bucket_website_configuration" "todoAppTest" {
+  bucket = aws_s3_bucket.todoAppTest.bucket
 
   index_document {
     suffix = "index.html"
@@ -45,12 +45,12 @@ resource "aws_s3_bucket_website_configuration" "todoApp" {
   }
 }
 
-resource "aws_s3_bucket_policy" "todoApp" {
-  bucket = aws_s3_bucket.todoApp.id
-  policy = data.aws_iam_policy_document.todoApp.json
+resource "aws_s3_bucket_policy" "todoAppTest" {
+  bucket = aws_s3_bucket.todoAppTest.id
+  policy = data.aws_iam_policy_document.todoAppTest.json
 }
 
-data "aws_iam_policy_document" "todoApp" {
+data "aws_iam_policy_document" "todoAppTest" {
   statement {
     sid = "Add permission"
 
@@ -64,34 +64,34 @@ data "aws_iam_policy_document" "todoApp" {
     ]
 
     resources = [
-      "arn:aws:s3:::${aws_s3_bucket.todoApp.bucket}/*",
+      "arn:aws:s3:::${aws_s3_bucket.todoAppTest.bucket}/*",
     ]
   }
 }
 
 output "bucket_website_url" {
-  value = "http://${aws_s3_bucket_website_configuration.todoApp.website_endpoint}"
+  value = "http://${aws_s3_bucket_website_configuration.todoAppTest.website_endpoint}"
 }
 # Archive a file to be used with Lambda using consistent file mode
-data "archive_file" "lambda_deleteTodo" {
+data "archive_file" "lambda_deleteTodoTest" {
   type             = "zip"
-  source_file      = "${path.module}/lambda/functions/deleteTodo/index.js"
+  source_file      = "${path.module}/lambda/functions/deleteTodoTest/index.js"
   output_file_mode = "0666"
-  output_path      = "${path.module}/files/lambda-deleteTodo.js.zip"
+  output_path      = "${path.module}/files/lambda-deleteTodoTest.js.zip"
 }
 
-data "archive_file" "lambda_getTodos" {
+data "archive_file" "lambda_getTodosTest" {
   type             = "zip"
-  source_file      = "${path.module}/lambda/functions/getTodos/index.js"
+  source_file      = "${path.module}/lambda/functions/getTodosTest/index.js"
   output_file_mode = "0666"
-  output_path      = "${path.module}/files/lambda-getTodos.js.zip"
+  output_path      = "${path.module}/files/lambda-getTodosTest.js.zip"
 }
 
-data "archive_file" "lambda_updateTodo" {
+data "archive_file" "lambda_updateTodoTest" {
   type             = "zip"
-  source_file      = "${path.module}/lambda/functions/updateTodo/index.js"
+  source_file      = "${path.module}/lambda/functions/updateTodoTest/index.js"
   output_file_mode = "0666"
-  output_path      = "${path.module}/files/lambda-updateTodo.js.zip"
+  output_path      = "${path.module}/files/lambda-updateTodoTest.js.zip"
 }
 
 # iam role needed by lambda
@@ -99,13 +99,13 @@ data "aws_iam_role" "LabRole" {
   name = "LabRole"
 }
 
-resource "aws_lambda_function" "deleteTodo" {
-  filename      = data.archive_file.lambda_deleteTodo.output_path
-  function_name = "deleteTodo-function"
+resource "aws_lambda_function" "deleteTodoTest" {
+  filename      = data.archive_file.lambda_deleteTodoTest.output_path
+  function_name = "deleteTodoTest-function"
   role          = data.aws_iam_role.LabRole.arn
   handler       = "index.handler"
 
-  source_code_hash = filebase64sha256(data.archive_file.lambda_deleteTodo.output_path)
+  source_code_hash = filebase64sha256(data.archive_file.lambda_deleteTodoTest.output_path)
 
   runtime = "nodejs16.x"
 
@@ -116,12 +116,12 @@ resource "aws_lambda_function" "deleteTodo" {
   }
 
   depends_on = [
-    data.archive_file.lambda_deleteTodo
+    data.archive_file.lambda_deleteTodoTest
   ]
 }
 
-resource "aws_lambda_function_url" "deleteTodo" {
-  function_name      = aws_lambda_function.deleteTodo.function_name
+resource "aws_lambda_function_url" "deleteTodoTest" {
+  function_name      = aws_lambda_function.deleteTodoTest.function_name
   authorization_type = "NONE"
 
   cors {
@@ -134,13 +134,13 @@ resource "aws_lambda_function_url" "deleteTodo" {
   }
 }
 
-resource "aws_lambda_function" "getTodos" {
-  filename      = data.archive_file.lambda_getTodos.output_path
-  function_name = "getTodos-function"
+resource "aws_lambda_function" "getTodosTest" {
+  filename      = data.archive_file.lambda_getTodosTest.output_path
+  function_name = "getTodosTest-function"
   role          = data.aws_iam_role.LabRole.arn
   handler       = "index.handler"
 
-  source_code_hash = filebase64sha256(data.archive_file.lambda_getTodos.output_path)
+  source_code_hash = filebase64sha256(data.archive_file.lambda_getTodosTest.output_path)
 
   runtime = "nodejs16.x"
 
@@ -151,12 +151,12 @@ resource "aws_lambda_function" "getTodos" {
   }
 
   depends_on = [
-    data.archive_file.lambda_getTodos
+    data.archive_file.lambda_getTodosTest
   ]
 }
 
-resource "aws_lambda_function_url" "getTodos" {
-  function_name      = aws_lambda_function.getTodos.function_name
+resource "aws_lambda_function_url" "getTodosTest" {
+  function_name      = aws_lambda_function.getTodosTest.function_name
   authorization_type = "NONE"
 
   cors {
@@ -169,13 +169,13 @@ resource "aws_lambda_function_url" "getTodos" {
   }
 }
 
-resource "aws_lambda_function" "updateTodo" {
-  filename      = data.archive_file.lambda_updateTodo.output_path
-  function_name = "updateTodo-function"
+resource "aws_lambda_function" "updateTodoTest" {
+  filename      = data.archive_file.lambda_updateTodoTest.output_path
+  function_name = "updateTodoTest-function"
   role          = data.aws_iam_role.LabRole.arn
   handler       = "index.handler"
 
-  source_code_hash = filebase64sha256(data.archive_file.lambda_updateTodo.output_path)
+  source_code_hash = filebase64sha256(data.archive_file.lambda_updateTodoTest.output_path)
 
   runtime = "nodejs16.x"
 
@@ -186,12 +186,12 @@ resource "aws_lambda_function" "updateTodo" {
   }
 
   depends_on = [
-    data.archive_file.lambda_updateTodo
+    data.archive_file.lambda_updateTodoTest
   ]
 }
 
-resource "aws_lambda_function_url" "updateTodo" {
-  function_name      = aws_lambda_function.updateTodo.function_name
+resource "aws_lambda_function_url" "updateTodoTest" {
+  function_name      = aws_lambda_function.updateTodoTest.function_name
   authorization_type = "NONE"
 
   cors {
@@ -204,17 +204,17 @@ resource "aws_lambda_function_url" "updateTodo" {
   }
 }
 
-output "url_deleteTodo" {
-  value = aws_lambda_function_url.deleteTodo.function_url
+output "url_deleteTodoTest" {
+  value = aws_lambda_function_url.deleteTodoTest.function_url
 }
-output "url_getTodos" {
-  value = aws_lambda_function_url.getTodos.function_url
+output "url_getTodosTest" {
+  value = aws_lambda_function_url.getTodosTest.function_url
 }
-output "url_updateTodo" {
-  value = aws_lambda_function_url.updateTodo.function_url
+output "url_updateTodoTest" {
+  value = aws_lambda_function_url.updateTodoTest.function_url
 }
 resource "aws_dynamodb_table" "basic-dynamodb-table" {
-  name           = "todos"
+  name           = "todostest"
   read_capacity  = 20
   write_capacity = 20
   hash_key       = "id"
@@ -225,7 +225,7 @@ resource "aws_dynamodb_table" "basic-dynamodb-table" {
   }
 
   tags = {
-    Name = "dynamodb-table-1"
-    app  = "todo"
+    Name = "dynamodb-table-1-test"
+    app  = "todo-test"
   }
 }

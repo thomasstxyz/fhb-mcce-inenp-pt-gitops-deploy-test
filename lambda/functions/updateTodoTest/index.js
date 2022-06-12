@@ -7,14 +7,12 @@ item = JSON.parse(event.body);
 } else {
 item = event;
 }
-let parameters = {
-TableName: "todos",
-Key: {
-"id": item.id
-}
+let putParameters = {
+TableName: "todostest",
+Item: item
 }
 try {
-const data = await docClient.delete(parameters).promise();
+const data = await docClient.put(putParameters).promise();
 return {
 "statusCode": 200,
 "statusDescription": "200 OK",
@@ -22,7 +20,7 @@ return {
 "headers": {
 "Content-Type": "application/json"
 },
-"body": JSON.stringify({succeeded: true})
+"body": JSON.stringify(data)
 }
 } catch(err) {
 return {

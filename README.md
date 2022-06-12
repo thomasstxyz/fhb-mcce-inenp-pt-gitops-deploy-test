@@ -1,3 +1,5 @@
+! Test environment
+
 ![Illustration](./infrastructure-diagram.drawio.png)
 
 # Repository Description
@@ -5,9 +7,9 @@
 This repository contains:
 
 - Lambda functions source in `lambda/functions/`:
-    - deleteTodo
-    - getTodos
-    - updateTodo
+    - deleteTodoTest
+    - getTodosTest
+    - updateTodoTest
 - Terraform plan `main.tf`, which creates
     - DynamoDB Table
     - Lambda Functions
