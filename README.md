@@ -34,3 +34,4 @@ of the [AngularJS Frontend App](https://github.com/thomasstxyz/FHB-MCCE-2022-Tod
 
 Git commits trigger a CI pipeline, which uploads the 
 build artefacts to the S3 bucket as a last step.
+
