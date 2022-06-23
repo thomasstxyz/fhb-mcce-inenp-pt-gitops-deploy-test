@@ -229,3 +229,5 @@ resource "aws_dynamodb_table" "basic-dynamodb-table" {
     app  = "todo-test"
   }
 }
+
+//
